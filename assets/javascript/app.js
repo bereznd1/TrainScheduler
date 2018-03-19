@@ -44,57 +44,39 @@ $("#add-train-btn").on("click", function (event) {
 });
 
 
+//FIGURE OUT CHARLES QUESTION IN SLACK FROM SAT EVENING - WHEN TO STOP TRAINS AT A CERTAIN TIME IN THE DAY SO IT DOESNT JUST KEEP ADDING HOURS INTO THE NEXT DAY & THE TRAIN SCHEDULE RESUMES NEXT DAY AS IT WAS PREV DAY)
+
 // Creates Firebase event for adding new train to the database and a row in the html when a user adds an entry
 database.ref().on("child_added", function (childSnapshot, prevChildKey) {
 
-    // Store everything into a variable
+    // Stores everything into a variable
     var trainName = childSnapshot.val().name;
     var destination = childSnapshot.val().destination;
     var firstTrainTime = childSnapshot.val().firstTrainTime;
     var freq = childSnapshot.val().freq;
 
+    // Changes First Train Time into military time from Unix time
+    firstTrainTime = moment.unix(firstTrainTime).format("HH:mm");
 
+    // Pushes First Train Time back 1 day to make sure it comes before current time
+    var firstTimeConverted = moment(firstTrainTime, "HH:mm").subtract(1, "days");
 
+    // Finds the difference between the Current Time & the First Train Time   
+    var diffTime = moment().diff(firstTimeConverted, "minutes");
 
-    // First Time (pushed back 1 year to make sure it comes before current time)
-    var firstTimeConverted = moment(firstTrainTime, "HH:mm").subtract(1, "years");
+    // Finds the # of minutes since the last train came
+    var remainder = (diffTime - 1440) % freq;
 
-    // Current Time
-    //var currentTime = moment();
-
-    // Difference between the times
-    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-
-    // Time apart (remainder)
-    var remainder = diffTime % freq;
-
-    // Minute Until Train
+    //Finds the # of minute until the next train
     var minsAway = freq - remainder;
-   // console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
 
-    // Next Train
+    //Finds the time of the next train in Unix time
     var nextArrival = moment().add(minsAway, "minutes");
-    //console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
 
+    //Changes the time of the next train from Unix time to regular time
+    nextArrival = moment(nextArrival).format("LT");
 
-
-
-
-
-
-    // Prettify the employee start
-    var empStartPretty = moment.unix(empStart).format("MM/DD/YY");
-
-    // Calculate the months worked using hardcore math
-    // To calculate the months worked
-    var empMonths = moment().diff(moment.unix(empStart, "X"), "months");
-    console.log(empMonths);
-
-    // Calculate the total billed rate
-    var empBilled = empMonths * empRate;
-    console.log(empBilled);
-
-    // Add each employee's data into the table
+    //Adds each train's data into the table
     $("#train-info-table > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" +
         freq + "</td><td>" + nextArrival + "</td><td>" + minsAway + "</td></tr>");
 });
