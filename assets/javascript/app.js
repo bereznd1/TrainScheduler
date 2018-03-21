@@ -33,7 +33,7 @@ $("#add-train-btn").on("click", function (event) {
     // Uploads train data to the database
     database.ref().push(newTrain);
 
-    // Alert
+    // Alert when a train is added
     alert("New train successfully added");
 
     // Clears all of the text-boxes
@@ -42,9 +42,6 @@ $("#add-train-btn").on("click", function (event) {
     $("#train-time-input").val("");
     $("#frequency-input").val("");
 });
-
-
-//FIGURE OUT CHARLES QUESTION IN SLACK FROM SAT EVENING - WHEN TO STOP TRAINS AT A CERTAIN TIME IN THE DAY SO IT DOESNT JUST KEEP ADDING HOURS INTO THE NEXT DAY & THE TRAIN SCHEDULE RESUMES NEXT DAY AS IT WAS PREV DAY)
 
 // Creates Firebase event for adding new train to the database and a row in the html when a user adds an entry
 database.ref().on("child_added", function (childSnapshot, prevChildKey) {
