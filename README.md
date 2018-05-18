@@ -5,7 +5,7 @@
  [View Live!](https://bereznd1.github.io/TrainScheduler/) 
 
 
-## Brief Description
+## Brief Description   
 
 The **Firebase Train Schedule Application** allows users to enter a *Train Name*, *Destination*, *First Train Time*, & *Frequency*, and then their input gets stored in a **Firebase** database. When a new item is added to the database, the table at the top of the page with all the train information gets updated & it displays the next arrival time of the train, as well as how many minutes away it is. These last two pieces of information are calculated on the front end by using a JavaScript library called **MomentJS**, which is used to simplify working with dates & times in JavaScript.
 
